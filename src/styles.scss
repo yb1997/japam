@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/cdk' as cdk;
+
+@include cdk.overlay();
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
