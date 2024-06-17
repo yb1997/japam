@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">japam</string>
+    <string name="title_activity_main">japam</string>
+    <string name="package_name">in.ybear.japam</string>
+    <string name="custom_url_scheme">in.ybear.japam</string>
+</resources>
