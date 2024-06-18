@@ -43,7 +43,7 @@ export class HomeScreenComponent {
 
   private readonly _counter = signal(0);
 
-  threshold = 5; // acting like input() + signal
+  threshold = 108; // acting like input() + signal
 
   onRoundCounterClick() {
     this._counter.update((val) => val + 1);
