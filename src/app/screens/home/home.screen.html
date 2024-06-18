@@ -7,17 +7,22 @@
     </button> -->
 
     {{roundCounter()}}
-
   </section>
 
   <section class="bottom">
     <div>Total rounds: {{totalRound()}}</div>
-    <button class="reset-button" (click)="onReset()">Reset</button>
+    <button class="reset-button" (click)="showResetDialog()">Reset</button>
   </section>
 </div>
 
 <ng-template #resetDialog>
-    <div class="reset-container">
-        reset dialog
-    </div>
+  <div class="reset-container">
+    <ul>
+      @for(item of counterList; track item; let lastItem = $last){
+      <li (click)="onReset(item)" class="list-item">{{item}}</li>
+      @if(!lastItem) {
+      <hr />
+      } }
+    </ul>
+  </div>
 </ng-template>
