@@ -1,16 +1,17 @@
+import { Dialog, DialogModule, DialogRef } from "@angular/cdk/dialog";
 import {
   Component,
+  OnInit,
   TemplateRef,
   ViewChild,
-  computed,
-  model,
-  signal,
+  inject,
+  signal
 } from "@angular/core";
 import { AppbarComponent } from "../../layouts/app-bar/app-bar.component";
-import { Dialog, DialogModule, DialogRef } from "@angular/cdk/dialog";
 
-import { Preferences } from '@capacitor/preferences';
 import { App } from '@capacitor/app';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Preferences } from '@capacitor/preferences';
 
 
 type CounterName = "Current Round" | "Total Rounds";
@@ -22,36 +23,65 @@ type CounterName = "Current Round" | "Total Rounds";
   standalone: true,
   imports: [AppbarComponent, DialogModule],
 })
-export class HomeScreenComponent {
+export class HomeScreenComponent implements OnInit {
+  private readonly dialog = inject(Dialog);
+  private readonly _counter = signal(0);
+  private dialogRef: DialogRef | null = null;
+  private threshold = 108;
+  protected readonly roundCounter = signal(0);
+  protected readonly totalRound = signal(0);
+  protected readonly counterList: CounterName[] = ["Current Round", "Total Rounds"];
+
   @ViewChild("resetDialog")
   resetDialog!: TemplateRef<any>;
 
-  dialogRef: DialogRef | null = null;
+  async ngOnInit() {
+    console.log("ngOnInit fired!");
 
-  counterList: CounterName[] = ["Current Round", "Total Rounds"];
+    await App.addListener("pause", this.onAppPause.bind(this));
+    await App.addListener("resume", this.onAppResume.bind(this));
+    await App.addListener("appStateChange", this.onAppStateChange.bind(this));
 
-  constructor(public dialog: Dialog) {}
+    const data = await Preferences.get({ key: "data" });
+    console.log(`data from storage: ${JSON.stringify(data)}`);
 
-  // readonly roundCounter = computed(() => this._counter() % this.threshold());
 
-  // readonly totalRound = computed(() =>
-  //   Math.floor(this._counter() / this.threshold())
-  // );
+  }
 
-  readonly roundCounter = signal(0);
-  readonly totalRound = signal(0);
+  async ngOnDestroy() {
+    await Preferences.set({
+      key: "data",
+      value: JSON.stringify({
+        rounderCounter: this.roundCounter(),
+        totalRound: this.totalRound()
+      })
+    });
+    console.log("home screen component ngOnDestroy called!");
+  }
 
-  private readonly _counter = signal(0);
+  onAppPause() {
+    console.log("app paused");
+  }
 
-  threshold = 108; // acting like input() + signal
+  onAppResume() {
+    console.log("app resume");
+  }
 
-  onRoundCounterClick() {
+  onAppStateChange(e: any) {
+    console.log(`app state changed, state: ${JSON.stringify(e)}`);
+  }
+
+  async onRoundCounterClick() {
     this._counter.update((val) => val + 1);
+    const reachedThreshold = this.roundCounter() + 1 === this.threshold;
+    this.totalRound.update(val => reachedThreshold ? val + 1 : val);
+    this.roundCounter.update(_ => this._counter() % this.threshold);
 
-    this.totalRound.update((val) =>
-      this.roundCounter() + 1 === this.threshold ? val + 1 : val
-    );
-    this.roundCounter.update((val) => this._counter() % this.threshold);
+    if (reachedThreshold) {
+      await Haptics.vibrate({ duration: 800 });
+    } else {
+      await Haptics.impact({ style: ImpactStyle.Light });
+    }
   }
 
   showResetDialog() {
