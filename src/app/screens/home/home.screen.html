@@ -1,1 +1,23 @@
-Home screen
+<app-bar></app-bar>
+
+<div class="home-container">
+  <section class="counter-section" (click)="onRoundCounterClick()">
+    <!-- <button class="bead-button" (click)="onRoundCounterClick()">
+      {{roundCounter()}}
+    </button> -->
+
+    {{roundCounter()}}
+
+  </section>
+
+  <section class="bottom">
+    <div>Total rounds: {{totalRound()}}</div>
+    <button class="reset-button" (click)="onReset()">Reset</button>
+  </section>
+</div>
+
+<ng-template #resetDialog>
+    <div class="reset-container">
+        reset dialog
+    </div>
+</ng-template>
