@@ -39,36 +39,35 @@ export class HomeScreenComponent implements OnInit {
     console.log("ngOnInit fired!");
 
     await App.addListener("pause", this.onAppPause.bind(this));
-    await App.addListener("resume", this.onAppResume.bind(this));
-    await App.addListener("appStateChange", this.onAppStateChange.bind(this));
 
+    await this.restoreLastState();
+  }
+  
+  async restoreLastState() {
     const data = await Preferences.get({ key: "data" });
     console.log(`data from storage: ${JSON.stringify(data)}`);
-
-
+  
+    if (data !== null && data.value !== null || data.value !== "") {
+      const { _counter, roundCounter, totalRound } = JSON.parse(data.value ?? `{ "_counter": 0, "roundCounter": 0, "totalRound": 0 }`);
+      this._counter.set(_counter);
+      this.roundCounter.set(roundCounter);
+      this.totalRound.set(totalRound);
+    }
   }
 
-  async ngOnDestroy() {
+  async onAppPause() {
+    console.log("app paused");
+    const data = JSON.stringify({
+      roundCounter: this.roundCounter(),
+      totalRound: this.totalRound(),
+      _counter: this._counter()
+    });
+
     await Preferences.set({
       key: "data",
-      value: JSON.stringify({
-        rounderCounter: this.roundCounter(),
-        totalRound: this.totalRound()
-      })
+      value: data
     });
-    console.log("home screen component ngOnDestroy called!");
-  }
-
-  onAppPause() {
-    console.log("app paused");
-  }
-
-  onAppResume() {
-    console.log("app resume");
-  }
-
-  onAppStateChange(e: any) {
-    console.log(`app state changed, state: ${JSON.stringify(e)}`);
+    console.log("saving application state: ", data);
   }
 
   async onRoundCounterClick() {
