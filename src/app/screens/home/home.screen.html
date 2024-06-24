@@ -1,19 +1,36 @@
-<app-bar></app-bar>
+<app-bar-layout>
+  <ng-template appTemplate="navbarContent">
+    <div class="nav-list">
+      <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
+      <mat-menu #menu="matMenu">
+        <a mat-menu-item routerLink="/settings">
+          <button mat-menu-item>
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </button>
+        </a>
+      </mat-menu>
+    </div>
+  </ng-template>
 
-<div class="home-container">
-  <section class="counter-section" (click)="onRoundCounterClick()">
-    <!-- <button class="bead-button" (click)="onRoundCounterClick()">
-      {{roundCounter()}}
-    </button> -->
+  <ng-template appTemplate="mainContent">
+    <div class="home-container">
+      <section class="counter-section" (click)="onRoundCounterClick()">
+        {{roundCounter()}}
+      </section>
 
-    {{roundCounter()}}
-  </section>
-
-  <section class="bottom">
-    <div>Total rounds: {{totalRound()}}</div>
-    <button class="reset-button" (click)="showResetDialog()">Reset</button>
-  </section>
-</div>
+      <section class="bottom">
+        <div>Total rounds: {{totalRound()}}</div>
+        <div>
+          <button  class="reset-button" (click)="showResetDialog()">
+            Reset
+          </button>
+          <button  class="decrement" (click)="decrementCounter()">-</button>
+        </div>
+      </section>
+    </div>
+  </ng-template>
+</app-bar-layout>
 
 <ng-template #resetDialog>
   <div class="reset-container">

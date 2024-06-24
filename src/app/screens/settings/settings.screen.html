@@ -1,0 +1,30 @@
+<app-bar-layout>
+  <ng-template appTemplate="navbarContent">
+    <div class="nav-list">
+      <a routerLink="/" style="display: flex">
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </a>
+    </div>
+  </ng-template>
+  <ng-template appTemplate="mainContent">
+    <div class="settings">
+      <form (ngSubmit)="updateThreshold()" #myForm="ngForm">
+        <mat-form-field class="example-full-width">
+          <mat-label>Threshold</mat-label>
+          <input
+            required
+            type="text"
+            matInput
+            name="threshold"
+            [(ngModel)]="threshold"
+            placeholder="Threshold"
+          />
+          @if (!threshold) {
+          <mat-error>Threshold is <strong>required</strong></mat-error>
+          }
+        </mat-form-field>
+        <button mat-raised-button type="submit">Update</button>
+      </form>
+    </div>
+  </ng-template>
+</app-bar-layout>

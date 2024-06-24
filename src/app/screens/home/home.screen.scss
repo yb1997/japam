@@ -1,5 +1,14 @@
 @import "../../../styles.scss";
 
+.nav-list {
+  padding-right: 0.5em;
+  height: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .home-container {
   @extend .flex-center;
   flex-direction: column;
@@ -13,7 +22,6 @@
   flex: 2;
   width: 100%;
   font-size: 13rem;
-
 }
 
 .bead-button {
@@ -44,8 +52,18 @@
   outline: 0;
 }
 
+.decrement {
+  width: 45px;
+  padding: 0.4em;
+  font-size: 27px;
+  margin-left: 1em;
+  outline: none;
+  border: none;
+  background-color: #d29757;
+}
+
 .reset-container {
-    display: block;
+  display: block;
   background: #fff;
   border-radius: 8px;
   padding: 8px 16px;
@@ -57,7 +75,16 @@
 
     .list-item {
       font-size: 24px;
-      padding-bottom: .5rem;
+      padding-bottom: 0.5rem;
     }
+  }
+}
+
+:host {
+  ::ng-deep .mat-icon {
+    height: unset;
+    width: unset;
+    font-size: 2rem;
+    color: black;
   }
 }

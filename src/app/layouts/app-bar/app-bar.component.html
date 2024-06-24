@@ -1,1 +1,11 @@
-<nav></nav>
+<nav>
+  <ng-container
+    *ngTemplateOutlet="navContentTemplate || defaultTemplate"
+  ></ng-container>
+</nav>
+
+<ng-container
+  *ngTemplateOutlet="mainContentTemplate || defaultTemplate"
+></ng-container>
+
+<ng-template #defaultTemplate></ng-template>
